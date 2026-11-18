@@ -1,1 +1,125 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Sign In | PLUS MEDISTOCK</title><link rel="stylesheet" href="assets/css/style.css"></head><body><main class="auth-page"><div class="auth-layout"><aside class="auth-aside"><a class="brand footer-brand" href="index.html"><span class="brand-mark">PM</span><span>PLUS MEDISTOCK</span></a><h1>Your pharmacy workspace, in one place.</h1><p>Sign-in screen preview. Connect the secure authentication backend before using real store accounts.</p><div class="visual-row"><span>Medicine records</span><b>Organised</b></div><div class="visual-row"><span>Store operations</span><b>Connected</b></div><div class="visual-row"><span>Access</span><b>Protected</b></div></aside><section class="auth-form"><a href="index.html" class="dash-sub">← Back to website</a><h2>Welcome back</h2><p>Sign in to your medical store account.</p><form data-demo-form><div class="field"><label>Email address</label><input type="email" required placeholder="you@medicalstore.com"></div><div class="field"><label>Password</label><input type="password" required placeholder="Enter your password"></div><button class="btn" style="width:100%" type="submit">Sign in&nbsp; →</button><p class="dash-sub" data-form-message aria-live="polite"></p></form><div class="notice">This GitHub Pages build is a styled front-end. Login is not connected to a live database yet.</div></section></div></main><script src="assets/js/site.js"></script></body></html>
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign In | PLUS MEDISTOCK</title>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+<main class="auth-page">
+<div class="auth-layout">
+
+<aside class="auth-aside">
+<a class="brand footer-brand" href="index.html">
+<span class="brand-mark">PM</span>
+<span>PLUS MEDISTOCK</span>
+</a>
+
+<h1>Your pharmacy workspace, in one place.</h1>
+<p>Sign in to your medical store account.</p>
+
+<div class="visual-row"><span>Medicine records</span><b>Organised</b></div>
+<div class="visual-row"><span>Store operations</span><b>Connected</b></div>
+<div class="visual-row"><span>Access</span><b>Protected</b></div>
+</aside>
+
+<section class="auth-form">
+<a href="index.html" class="dash-sub">← Back to website</a>
+<h2>Welcome back</h2>
+<p>Sign in to your medical store account.</p>
+
+<form id="loginForm">
+<div class="field">
+<label>Email address</label>
+<input id="loginEmail" type="email" required
+placeholder="you@medicalstore.com"
+value="admin@plusmedistock.in">
+</div>
+
+<div class="field">
+<label>Password</label>
+<input id="loginPassword" type="password" required
+placeholder="Enter your password">
+</div>
+
+<button class="btn" id="loginButton" style="width:100%" type="submit">
+Sign in →
+</button>
+
+<p class="dash-sub" id="loginMessage" aria-live="polite"></p>
+</form>
+
+<div class="notice">
+Sign in with your authorised PLUS MEDISTOCK account.
+</div>
+</section>
+
+</div>
+</main>
+
+<script src="assets/js/site.js"></script>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbwF_3Ncy-J9aO4ZdY-VG5fBVdabXZwiEfZsG_kiYkxw6IBKP2CTH8s0W9ClC_p2OfA/exec";
+
+document.getElementById("loginForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const email = document.getElementById("loginEmail").value.trim();
+    const password = document.getElementById("loginPassword").value;
+    const button = document.getElementById("loginButton");
+    const message = document.getElementById("loginMessage");
+
+    button.disabled = true;
+    button.textContent = "Signing in...";
+    message.textContent = "";
+
+    try {
+        const response = await fetch(API_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "text/plain;charset=utf-8"
+            },
+            body: JSON.stringify({
+                action: "login",
+                payload: {
+                    email: email,
+                    password: password
+                }
+            })
+        });
+
+        const result = await response.json();
+
+        if (!result.ok) {
+            throw new Error(result.message || "Login failed.");
+        }
+
+        const data = result.data;
+
+        localStorage.setItem("plusmedistock_token", data.token);
+        localStorage.setItem("plusmedistock_user", JSON.stringify(data.user));
+
+        message.textContent = "Login successful. Opening dashboard...";
+
+        window.location.href = "dashboard.html";
+
+    } catch (error) {
+        console.error(error);
+
+        message.textContent =
+            error.message.includes("Failed to fetch")
+            ? "Backend connection failed. Check API deployment or CORS."
+            : error.message;
+
+        button.disabled = false;
+        button.textContent = "Sign in →";
+    }
+});
+</script>
+
+</body>
+</html>
