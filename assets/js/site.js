@@ -1,35 +1,28 @@
 
-const API_URL = "https://script.google.com/macros/s/AKfycbwF_3Ncy-J9aO4ZdY-VG5fBVdabXZwiEfZsG_kiYkxw6IBKP2CTH8s0W9ClC_p2OfA/exec";
+window.PLUS_MEDISTOCK_API_URL = "https://script.google.com/macros/s/AKfycbwF_3Ncy-J9aO4ZdY-VG5fBVdabXZwiEfZsG_kiYkxw6IBKP2CTH8s0W9ClC_p2OfA/exec";
 
-// Backend API request
-async function apiRequest(action, payload = {}) {
-    try {
-        const response = await fetch(API_URL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "text/plain;charset=utf-8"
-            },
-            body: JSON.stringify({
-                action: action,
-                payload: payload
-            })
-        });
+// Backend API
+window.apiRequest = async function(action, payload = {}) {
+    const response = await fetch(window.PLUS_MEDISTOCK_API_URL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify({
+            action: action,
+            payload: payload
+        })
+    });
 
-        const result = await response.json();
+    const result = await response.json();
 
-        if (!result.ok) {
-            throw new Error(result.message || "Backend request failed");
-        }
-
-        return result.data;
-
-    } catch (error) {
-        console.error("API Error:", error);
-        throw error;
+    if (!result.ok) {
+        throw new Error(result.message || "Backend request failed");
     }
-}
 
-// Menu, year and forms
+    return result.data;
+};
+
 document.addEventListener("DOMContentLoaded", () => {
 
     // Mobile menu
@@ -39,7 +32,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (toggle && links) {
         toggle.addEventListener("click", () => {
             links.classList.toggle("open");
-
             toggle.setAttribute(
                 "aria-expanded",
                 links.classList.contains("open") ? "true" : "false"
@@ -52,33 +44,61 @@ document.addEventListener("DOMContentLoaded", () => {
         el.textContent = new Date().getFullYear();
     });
 
-    // Active navigation link
+    // Active navigation
     const path = location.pathname.split("/").pop() || "index.html";
 
     document.querySelectorAll(".nav-links a").forEach(a => {
-        const href = a.getAttribute("href");
-
-        if (href === path) {
+        if (a.getAttribute("href") === path) {
             a.classList.add("active");
         }
     });
 
-    // Demo forms
-    document.querySelectorAll("[data-demo-form]").forEach(form => {
-        form.addEventListener("submit", async (e) => {
+    // Login form
+    const loginForm = document.getElementById("loginForm");
+
+    if (loginForm) {
+        loginForm.addEventListener("submit", async (e) => {
             e.preventDefault();
 
-            const msg = form.querySelector("[data-form-message]");
+            const email = document.getElementById("loginEmail").value.trim();
+            const password = document.getElementById("loginPassword").value;
+            const button = document.getElementById("loginButton");
+            const message = document.getElementById("loginMessage");
 
-            if (msg) {
-                msg.textContent = "Please wait...";
-            }
+            button.disabled = true;
+            button.textContent = "Signing in...";
+            message.textContent = "";
 
-            // अभी demo form के लिए कोई backend action निर्धारित नहीं है।
-            if (msg) {
-                msg.textContent =
-                    "Form backend action is not configured yet.";
+            try {
+                const data = await window.apiRequest("login", {
+                    email: email,
+                    password: password
+                });
+
+                if (data.token) {
+                    localStorage.setItem("plusmedistock_token", data.token);
+                }
+
+                if (data.user) {
+                    localStorage.setItem(
+                        "plusmedistock_user",
+                        JSON.stringify(data.user)
+                    );
+                }
+
+                message.textContent = "Login successful. Opening dashboard...";
+
+                window.location.href = "dashboard.html";
+
+            } catch (error) {
+                console.error("Login Error:", error);
+
+                message.textContent = error.message || "Unable to login.";
+
+                button.disabled = false;
+                button.textContent = "Sign in →";
             }
         });
-    });
+    }
+
 });
