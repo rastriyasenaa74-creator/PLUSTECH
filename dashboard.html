@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dashboard | PLUS MEDISTOCK</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+.dash-wrap{max-width:1200px;margin:36px auto;padding:0 20px}.dash-top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:24px}.dash-top h1{margin:0}.dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin:22px 0}.dash-card,.dash-panel{background:#fff;border:1px solid #e1e8f3;border-radius:16px;padding:20px;box-shadow:0 8px 24px rgba(20,45,80,.05)}.dash-card small{color:#687991}.dash-card strong{display:block;font-size:28px;margin-top:8px;color:#17365f}.dash-panel{margin:18px 0;overflow:auto}.dash-panel h2{margin-top:0}.dash-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;align-items:end}.dash-form .field{margin:0}.dash-form input,.dash-form select{width:100%;box-sizing:border-box}.dash-table{width:100%;border-collapse:collapse;min-width:620px}.dash-table th,.dash-table td{text-align:left;padding:12px;border-bottom:1px solid #e8edf5;font-size:14px}.dash-table th{color:#52647d;background:#f7f9fc}.dash-actions{display:flex;gap:8px;flex-wrap:wrap}.dash-btn{border:0;border-radius:9px;padding:10px 14px;background:#315cff;color:white;cursor:pointer;font-weight:600}.dash-btn.secondary{background:#eaf0ff;color:#2448bc}.dash-btn.danger{background:#b42318}.dash-btn:disabled{opacity:.6;cursor:wait}.dash-msg{padding:12px 14px;border-radius:10px;background:#eef4ff;color:#2448bc;margin:12px 0;display:none}.dash-msg.show{display:block}.dash-muted{color:#687991}.dash-section{display:none}.dash-section.active{display:block}.dash-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}.dash-tabs button{border:1px solid #dbe4f1;background:#fff;color:#28415f;padding:9px 13px;border-radius:9px;cursor:pointer}.dash-tabs button.active{background:#17365f;color:#fff}.pill{display:inline-block;padding:4px 9px;border-radius:30px;background:#edf2ff;color:#2448bc;font-size:12px}.danger-text{color:#b42318}.empty{padding:20px;color:#687991;text-align:center}@media(max-width:600px){.dash-wrap{margin:20px auto;padding:0 12px}.dash-panel{padding:14px}}
+</style>
+</head>
+<body>
+<main class="dash-wrap">
+ <header class="dash-top">
+  <div><a class="brand footer-brand" href="index.html"><span class="brand-mark">PM</span><span>PLUS MEDISTOCK</span></a><h1 style="margin-top:18px">Dashboard</h1><p class="dash-sub" id="welcomeText">Loading account...</p></div>
+  <div class="dash-actions"><button class="dash-btn secondary" id="refreshBtn">Refresh</button><button class="dash-btn danger" id="logoutBtn">Logout</button></div>
+ </header>
+ <div id="globalMessage" class="dash-msg" role="status"></div>
+ <section id="stats" class="dash-grid"></section>
+ <nav id="tabs" class="dash-tabs"></nav>
+ <section id="superSection" class="dash-section">
+  <div class="dash-panel"><h2>Register Medical Store</h2><form id="medicalForm" class="dash-form">
+   <div class="field"><label>Medical store name *</label><input name="medical_name" required></div><div class="field"><label>Owner name</label><input name="owner_name"></div><div class="field"><label>Mobile</label><input name="mobile"></div><div class="field"><label>Email</label><input name="email" type="email"></div><div class="field"><label>Address</label><input name="address"></div><div class="field"><label>GSTIN</label><input name="gstin"></div><div class="field"><label>Drug licence</label><input name="drug_license"></div><button class="dash-btn" type="submit">Create Medical</button>
+  </form></div>
+  <div class="dash-panel"><h2>Medical Stores</h2><div id="medicalTable" class="dash-muted">Loading...</div></div>
+  <div class="dash-panel"><h2>Create Store Login</h2><p class="dash-muted">पहले Medical Store बनाएं। फिर उसकी ID चुनकर Owner/Staff login बनाएं।</p><form id="userForm" class="dash-form">
+   <div class="field"><label>Medical Store *</label><select name="medical_id" id="medicalSelect" required><option value="">Select store</option></select></div><div class="field"><label>Name *</label><input name="name" required></div><div class="field"><label>Email *</label><input name="email" type="email" required></div><div class="field"><label>Password (min 8) *</label><input name="password" type="password" minlength="8" required></div><div class="field"><label>Mobile</label><input name="mobile"></div><div class="field"><label>Role</label><select name="role"><option value="OWNER">OWNER</option><option value="STAFF">STAFF</option></select></div><button class="dash-btn" type="submit">Create Login</button>
+  </form></div>
+ </section>
+ <section id="storeSection" class="dash-section">
+  <div class="dash-panel"><h2>Add Medicine</h2><form id="medicineForm" class="dash-form">
+   <div class="field"><label>Medicine name *</label><input name="name" required></div><div class="field"><label>Salt</label><input name="salt"></div><div class="field"><label>Company</label><input name="company"></div><div class="field"><label>Batch</label><input name="batch"></div><div class="field"><label>Expiry (YYYY-MM-DD)</label><input name="expiry" type="date"></div><div class="field"><label>Purchase rate</label><input name="purchase_rate" type="number" min="0" step="0.01"></div><div class="field"><label>Sale rate</label><input name="sale_rate" type="number" min="0" step="0.01"></div><div class="field"><label>MRP</label><input name="mrp" type="number" min="0" step="0.01"></div><div class="field"><label>Stock</label><input name="stock" type="number" min="0" step="1" value="0"></div><div class="field"><label>Minimum stock</label><input name="min_stock" type="number" min="0" step="1" value="0"></div><div class="field"><label>HSN</label><input name="hsn"></div><div class="field"><label>GST %</label><input name="gst_percent" type="number" min="0" step="0.01" value="0"></div><button class="dash-btn" type="submit">Save Medicine</button>
+  </form></div>
+  <div class="dash-panel"><h2>Medicines</h2><div id="medicineTable" class="dash-muted">Loading...</div></div>
+  <div class="dash-panel"><h2>Add Customer</h2><form id="customerForm" class="dash-form"><div class="field"><label>Name *</label><input name="name" required></div><div class="field"><label>Mobile</label><input name="mobile"></div><div class="field"><label>Address</label><input name="address"></div><button class="dash-btn" type="submit">Save Customer</button></form><div id="customerTable"></div></div>
+  <div class="dash-panel"><h2>Add Supplier</h2><form id="supplierForm" class="dash-form"><div class="field"><label>Name *</label><input name="name" required></div><div class="field"><label>Mobile</label><input name="mobile"></div><div class="field"><label>Address</label><input name="address"></div><div class="field"><label>GSTIN</label><input name="gstin"></div><button class="dash-btn" type="submit">Save Supplier</button></form><div id="supplierTable"></div></div>
+  <div class="dash-panel"><h2>Stock Report</h2><div id="stockReport"></div></div>
+  <div class="dash-panel"><h2>Expiry Report (next 90 days / expired)</h2><div id="expiryReport"></div></div>
+  <div class="dash-panel"><h2>Purchases & Sales</h2><p class="dash-muted">इन modules के लिए वर्तमान Apps Script backend में purchase/sales create API उपलब्ध नहीं है। इसलिए यहाँ अभी live entry का दावा नहीं किया जा रहा है।</p></div>
+ </section>
+</main>
+<script src="assets/js/site.js"></script>
+<script>
+(function(){
+ const API=window.PLUS_MEDISTOCK_API_URL||'https://script.google.com/macros/s/AKfycbwF_3Ncy-J9aO4ZdY-VG5fBVdabXZwiEfZsG_kiYkxw6IBKP2CTH8s0W9ClC_p2OfA/exec';
+ const token=localStorage.getItem('plusmedistock_token');
+ let user={}; let medicals=[];
+ const $=id=>document.getElementById(id);
+ function msg(text){const el=$('globalMessage');el.textContent=text;el.classList.add('show');}
+ function clearMsg(){const el=$('globalMessage');el.textContent='';el.classList.remove('show');}
+ async function api(action,payload={}){
+  const response=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action,payload:{...payload,token}})});
+  const result=await response.json(); if(!result.ok) throw new Error(result.message||'API error'); return result.data;
+ }
+ function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+ function table(rows,cols){if(!rows||!rows.length)return '<div class="empty">No records found.</div>';return '<table class="dash-table"><thead><tr>'+cols.map(c=>'<th>'+c.label+'</th>').join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr>'+cols.map(c=>'<td>'+((c.render?c.render(r):esc(r[c.key]))??'')+'</td>').join('')+'</tr>').join('')+'</tbody></table>';}
+ function formData(form){return Object.fromEntries(new FormData(form).entries());}
+ async function loadOverview(){const d=await api('overview');if(user.role==='SUPER_ADMIN'){$('stats').innerHTML=[['Total Medicals',d.medical_count],['Active Medicals',d.active_medicals],['Pending Medicals',d.pending_medicals]].map(x=>`<div class="dash-card"><small>${x[0]}</small><strong>${x[1]??0}</strong></div>`).join('');}else{$('stats').innerHTML=[['Medicines',d.medicine_count],['Customers',d.customer_count],['Low Stock',d.low_stock]].map(x=>`<div class="dash-card"><small>${x[0]}</small><strong>${x[1]??0}</strong></div>`).join('');}}
+ async function loadMedicals(){medicals=await api('medical.list');$('medicalTable').innerHTML=table(medicals,[{key:'medical_name',label:'Medical Store'},{key:'medical_id',label:'Medical ID'},{key:'created_at',label:'Created'},{key:'status',label:'Status'},{key:'status',label:'Actions',render:r=>`<div class="dash-actions"><button class="dash-btn secondary" data-mid="${esc(r.medical_id)}" data-status="ACTIVE">Activate</button><button class="dash-btn danger" data-mid="${esc(r.medical_id)}" data-status="BLOCKED">Block</button></div>`}]);$('medicalSelect').innerHTML='<option value="">Select store</option>'+medicals.map(m=>`<option value="${esc(m.medical_id)}">${esc(m.medical_name)} — ${esc(m.status)}</option>`).join('');}
+ async function loadStore(){const [meds,customers,suppliers,stock,expiry]=await Promise.all([api('medicine.list'),api('customer.list'),api('supplier.list'),api('report.stock'),api('report.expiry')]);
+ $('medicineTable').innerHTML=table(meds,[{key:'name',label:'Medicine'},{key:'salt',label:'Salt'},{key:'batch',label:'Batch'},{key:'expiry',label:'Expiry'},{key:'stock',label:'Stock'},{key:'mrp',label:'MRP (₹)'},{key:'medicine_id',label:'Action',render:r=>`<button class="dash-btn danger" data-delete-medicine="${esc(r.medicine_id)}">Delete</button>`}]);
+ $('customerTable').innerHTML='<h3>Customer List</h3>'+table(customers,[{key:'name',label:'Name'},{key:'mobile',label:'Mobile'},{key:'address',label:'Address'}]);
+ $('supplierTable').innerHTML='<h3>Supplier List</h3>'+table(suppliers,[{key:'name',label:'Name'},{key:'mobile',label:'Mobile'},{key:'gstin',label:'GSTIN'}]);
+ $('stockReport').innerHTML=`<p>Total items: <b>${stock.total_items??0}</b> &nbsp; Low stock: <b>${stock.low_stock??0}</b></p>`+table(stock.items||[],[{key:'name',label:'Medicine'},{key:'batch',label:'Batch'},{key:'stock',label:'Stock'},{key:'min_stock',label:'Minimum'}]);
+ $('expiryReport').innerHTML=`<p>Matching items: <b>${expiry.count??0}</b></p>`+table(expiry.items||[],[{key:'name',label:'Medicine'},{key:'batch',label:'Batch'},{key:'expiry',label:'Expiry'},{key:'stock',label:'Stock'}]);
+ }
+ async function refresh(){clearMsg();await loadOverview();if(user.role==='SUPER_ADMIN')await loadMedicals();else await loadStore();}
+ function addTab(label,target,active=false){const b=document.createElement('button');b.textContent=label;b.className=active?'active':'';b.onclick=()=>{document.querySelectorAll('#tabs button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.dash-section').forEach(x=>x.classList.remove('active'));$(target).classList.add('active');};$('tabs').appendChild(b);}
+ async function init(){if(!token){location.href='login.html';return;}try{const d=await api('overview');user=JSON.parse(localStorage.getItem('plusmedistock_user')||'{}');if(!user.role)user.role=d.role;$('welcomeText').textContent=`Welcome, ${user.name||user.email||'User'} · ${user.role||'Account'}`;if(user.role==='SUPER_ADMIN'){addTab('Super Admin','superSection',true);$('superSection').classList.add('active');$('storeSection').remove();}else{addTab('Store Dashboard','storeSection',true);$('storeSection').classList.add('active');$('superSection').remove();}await refresh();}catch(e){msg(e.message+' Please sign in again.');localStorage.removeItem('plusmedistock_token');setTimeout(()=>location.href='login.html',1800);}}
+ $('medicalForm').addEventListener('submit',async e=>{e.preventDefault();try{await api('medical.create',formData(e.target));e.target.reset();await refresh();msg('Medical store created. Create its Owner login below.');}catch(x){msg(x.message);}});
+ $('userForm').addEventListener('submit',async e=>{e.preventDefault();try{await api('medical.createUser',formData(e.target));e.target.reset();msg('Store login created successfully.');}catch(x){msg(x.message);}});
+ $('medicineForm').addEventListener('submit',async e=>{e.preventDefault();const p=formData(e.target);['purchase_rate','sale_rate','mrp','stock','min_stock','gst_percent'].forEach(k=>p[k]=Number(p[k]||0));try{await api('medicine.create',p);e.target.reset();await refresh();msg('Medicine saved.');}catch(x){msg(x.message);}});
+ $('customerForm').addEventListener('submit',async e=>{e.preventDefault();try{await api('customer.create',formData(e.target));e.target.reset();await refresh();msg('Customer saved.');}catch(x){msg(x.message);}});
+ $('supplierForm').addEventListener('submit',async e=>{e.preventDefault();try{await api('supplier.create',formData(e.target));e.target.reset();await refresh();msg('Supplier saved.');}catch(x){msg(x.message);}});
+ document.addEventListener('click',async e=>{const b=e.target.closest('button');if(!b)return;try{if(b.dataset.mid){await api('medical.status',{medical_id:b.dataset.mid,status:b.dataset.status});await refresh();msg('Medical status updated.');}if(b.dataset.deleteMedicine){if(confirm('Delete this medicine record?')){await api('medicine.delete',{medicine_id:b.dataset.deleteMedicine});await refresh();msg('Medicine deleted.');}}}catch(x){msg(x.message);}});
+ $('refreshBtn').onclick=()=>refresh().catch(e=>msg(e.message));
+ $('logoutBtn').onclick=async()=>{try{await api('logout');}catch(e){}localStorage.removeItem('plusmedistock_token');localStorage.removeItem('plusmedistock_user');location.href='login.html';};
+ init();
+})();
+</script>
+</body></html>
