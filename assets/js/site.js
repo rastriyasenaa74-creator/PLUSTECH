@@ -1,4 +1,4 @@
-
+const API_URL = "https://script.google.com/macros/s/AKfycbwF_3Ncy-J9aO4ZdY-VG5fBVdabXZwiEfZsG_kiYkxw6IBKP2CTH8s0W9ClC_p2OfA/exec";
 document.addEventListener('DOMContentLoaded',()=>{
  const toggle=document.querySelector('.menu-toggle'), links=document.querySelector('.nav-links');
  if(toggle&&links) toggle.addEventListener('click',()=>{links.classList.toggle('open');toggle.setAttribute('aria-expanded',links.classList.contains('open')?'true':'false')});
